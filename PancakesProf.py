@@ -16,25 +16,24 @@ class Node:
         return hijos
 
 # Definir metodo de busqueda de profundidad normal
-def busqueda_profundidad(initial_state, goal_state):
+def busqueda_profundidad_rec(initial_state, goal_state):
     start_node = Node(initial_state)
     if start_node.state == goal_state:
         return start_node
-
-    frontier = deque([start_node])
     explored = set()
-
-    while frontier:
-        node = frontier.pop()
+    def dfs(node):
         explored.add(tuple(node.state))
 
         for hijo in node.expand():
             if tuple(hijo.state) not in explored:
                 if hijo.state == goal_state:
                     return hijo
-                frontier.append(hijo)
+                result = dfs(hijo)
+                if result is not None:
+                    return result
+        return None
+    return dfs(start_node)
 
-    return None
 
 def movimientos(node):
     actions = []
@@ -47,10 +46,10 @@ def print_state(state):
     print("[" + " ".join(str(s) for s in state) + "]")
 
 # Ejemplo de uso
-initial_state = [3, 1, 4, 2]
-goal_state = [1, 2, 3, 4]
+initial_state = ['d', 'b', 'c', 'a']
+goal_state = ['a', 'b', 'c', 'd']
 
-solution_node = busqueda_profundidad(initial_state, goal_state)
+solution_node = busqueda_profundidad_rec(initial_state, goal_state)
 
 if solution_node:
     print("Movimientos")
@@ -62,6 +61,7 @@ if solution_node:
     print_state(goal_state)
 else:
     print("No se encontró solución.")
+
 
 
 

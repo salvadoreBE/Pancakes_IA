@@ -29,7 +29,7 @@ def busqueda_amplitud(pila):
     return None, None
 
 # Ejemplo 
-pila_inicial = ['X', 'E', 'H', 'D', 'Z', 'O', 'I', 'L', 'A']
+pila_inicial = ['d', 'b', 'c', 'a']
 solucion, movimientos = busqueda_amplitud(pila_inicial)
 if solucion is not None:
     print("Movimientos realizados para llegar al resultado:")

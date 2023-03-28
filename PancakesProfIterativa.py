@@ -3,7 +3,7 @@ from copy import deepcopy
 def pancakes(stack):
     """"
     Función que ordena un stack de pancakes
-    utilizando una búsqueda en profundidad iterativa
+    utilizando una búsqueda en profundidad iterativa recursiva
     """
     # Definir una función que verifique si el stack está ordenado
     def ordenado(s):
@@ -13,31 +13,28 @@ def pancakes(stack):
     def girar(s, k):
         return s[:k+1][::-1] + s[k+1:]
 
-    def profundiad_iterativa(s, d, max_d, path):
+    # Definir una función auxiliar que realiza la búsqueda en profundidad iterativa recursiva
+    def profundidad_iterativa_rec(s, max_d, path):
         if ordenado(s):
             return True
-        if d == max_d:
+        if max_d == 0:
             return False
         for i in range(len(s)):
             nuevo_stack = girar(s, i)
             if nuevo_stack not in path:
                 path.append(nuevo_stack)
-                
-                # Nueva busqueda en profundidad
-                if profundiad_iterativa(nuevo_stack, d+1, max_d, path):
+                if profundidad_iterativa_rec(nuevo_stack, max_d - 1, path):
                     return True
                 path.pop()
-        
-        # Si no se han encontrado soluciones
         return False
     
-    # Realizar una búsqueda de profundidad iterativa con una profundidad máxima que aumenta
+    # Realizar una búsqueda de profundidad iterativa recursiva con una profundidad máxima que aumenta
     for depth in range(1, len(stack)+1):
         path = [stack]
-        if profundiad_iterativa(deepcopy(stack), 0, depth, path):
+        if profundidad_iterativa_rec(deepcopy(stack), depth, path):
             return path
         
-stack = [3, 1, 5, 2, 4, 8, 6]
+stack = ['d', 'b', 'c', 'a']
 path = pancakes(stack)
 for i, p in enumerate(path):
     print(f"Estado {i}: {p}")

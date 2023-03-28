@@ -6,16 +6,26 @@ def girar(pancakes, i):
 def ordenado(pancakes):
     return all(pancakes[i] <= pancakes[i+1] for i in range(len(pancakes)-1))
 
-# Función de búsqueda IDA
-def ida(pancakes, heuristica, threshold):
+# Función de búsqueda IDA recursiva
+def ida_rec(pancakes, heuristica, threshold):
     camino = []
     costo = heuristica(pancakes)
-    while costo < float('inf'):
-        result, nuevo_costo = limite_cost(pancakes, camino, costo, heuristica)
+    return buscar_rec(pancakes, camino, costo, heuristica, threshold)
+
+# Función auxiliar para buscar recursivamente
+def buscar_rec(pancakes, camino, costo, heuristica, threshold):
+    if costo > threshold:
+        return None
+    if ordenado(pancakes):
+        return camino
+    nuevo_costo = float('inf')
+    for i in range(len(pancakes)):
+        nuevo_pancakes = girar(pancakes, i)
+        nuevo_camino = camino + [chr(i + 65)]
+        nuevo_costo = min(nuevo_costo, heuristica(nuevo_pancakes) + len(nuevo_camino))
+        result = buscar_rec(nuevo_pancakes, nuevo_camino, costo + 1, heuristica, threshold)
         if result is not None:
             return result
-        # Actualizar el costo máximo
-        costo = nuevo_costo
     return None
 
 # Función de búsqueda DFS con límite de costo
@@ -30,7 +40,7 @@ def limite_cost(pancakes, path, costo, heuristica):
     nuevo_camino = None
     for i in range(len(pancakes)):
         nuevo_pancakes = girar(pancakes, i)
-        nuevo_camino = path + [i+1]
+        nuevo_camino = path + [chr(i + 65)]
         result, c = limite_cost(nuevo_pancakes, nuevo_camino, costo, heuristica)
         if result is not None:
             return result, costo
@@ -41,13 +51,13 @@ def limite_cost(pancakes, path, costo, heuristica):
 def heuristica(pancakes):
     count = 0
     for i in range(len(pancakes)-1):
-        if pancakes[i] > pancakes[i+1]:
+        if ord(pancakes[i]) > ord(pancakes[i+1]):
             count += 1
     return count
 
-# Ejemplo 
-pancakes = [8, 3, 5, 4, 1, 2]
-path = ida(pancakes, heuristica, 10)
+# Ejemplo
+pancakes = ['d', 'b', 'c', 'a']
+path = ida_rec(pancakes, heuristica, 10)
 print("Nodos recorridos:", len(path)+1)
 print("Movimientos:", path)
 
@@ -55,8 +65,10 @@ print("Movimientos:", path)
 pancakes_resuelto = pancakes
 print("Estado inicial:", pancakes_resuelto)
 for i in path:
-    pancakes_resuelto = girar(pancakes_resuelto, i-1)
+    index = ord(i) - 65
+    pancakes_resuelto = girar(pancakes_resuelto, index)
     print("Voltear los pancakes hasta el tamaño", i, ":", pancakes_resuelto)
 print("Estado final:", pancakes_resuelto)
+
 
 

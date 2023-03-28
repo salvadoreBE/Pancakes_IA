@@ -2,7 +2,7 @@ import heapq
 from typing import List, Tuple
 
 # Obtener los vecinos
-def vecinos(state: List[int]) -> List[List[int]]:
+def vecinos(state: List[str]) -> List[List[str]]:
     n = len(state)
     vecinos = []
     for i in range(2, n + 1):
@@ -11,15 +11,15 @@ def vecinos(state: List[int]) -> List[List[int]]:
     return vecinos
 
 # Obtener el costo de un movimiento
-def costos(state: List[int], next_state: List[int]) -> int:
+def costos(state: List[str], next_state: List[str]) -> int:
     return len(state) - len(next_state) + 1
 
 # Valor heurístico de un estado
-def heuristica(state: List[int], goal: List[int]) -> int:
+def heuristica(state: List[str], goal: List[str]) -> int:
     return sum([1 for i in range(len(state)) if state[i] != goal[i]])
 
 # Función para resolver el juego de los pancakes con A*
-def pancake_a_estrella(start: List[int], goal: List[int]) -> Tuple[int, List[List[int]]]:
+def pancake_a_estrella(start: List[str], goal: List[str]) -> Tuple[int, List[List[str]]]:
     open_set = [(heuristica(start, goal), 0, start, [])]
     closed_set = set()
     while open_set:
@@ -40,7 +40,7 @@ def pancake_a_estrella(start: List[int], goal: List[int]) -> Tuple[int, List[Lis
     return -1, []
 
 # Ejemplo
-start = [3, 1, 5, 4, 2, 9, 6, 7]
+start = ['d', 'b', 'c', 'a']
 goal = sorted(start)
 cost, path = pancake_a_estrella(start, goal)
 if cost == -1:
